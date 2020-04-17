@@ -15,6 +15,7 @@ INMAIN="/aqtrim/unmapped/map2pseudoT/"
 K2OUT="/aqtrim/unmapped/kraken2/"
 ROTIREADS="/rotireads/"
 ASSEMBLY="PseudoT"
+KRAKEN2_STD="/blastdb/kraken2/standard-no-human"  # Rich made an extra DB without human genome
 
 cd ..  # escape "contaminants" folder
 module load bedtools/2.27.1
@@ -41,7 +42,7 @@ do
     K2FOLDER="$CLONE$K2OUT"
     mkdir -p $K2FOLDER 
     REPORT_UNMAPPED_STD="$CLONE"_"$SAMPLENO.kraken2.std_db.log"
-    kraken2 --threads 10 --db $KRAKEN2_DEFAULT_DB --report $REPORT_UNMAPPED_STD \
+    kraken2 --threads 10 --db $KRAKEN2_STD --report $REPORT_UNMAPPED_STD \
     --paired --classified-out cseqs#.fq --unclassified-out useqs#.fq unmapped.R1.fq unmapped.R2.fq >/dev/null 
     
     # Rename and store classified reads
@@ -78,12 +79,18 @@ do
     mkdir -p "$CLONE$ROTIREADS"
 
     # Retrieve mapped reads from the original BAM file
-    echo "Retrieve mapped reads from the original BAM file..."
-    BAMFILE="$CLONE"/mapping/"$CLONE"_"$SAMPLENO"_to_VBCFpol.sorted.bam"" # the original alignment to the reference
-    samtools view -u -F4 $BAMFILE > mapped.bam # extract only reads that map to the reference genome 
-    samtools sort -n mapped.bam -o mapped.sorted.bam
-	bedtools bamtofastq -i mapped.sorted.bam -fq mapped.R1.fq  -fq2 mapped.R2.fq 2>/dev/null
-    
+    # echo "Retrieve mapped reads from the original BAM file..."
+    # BAMFILE="$CLONE"/mapping/"$CLONE"_"$SAMPLENO"_to_VBCFpol.sorted.bam"" # the original alignment to the reference
+    # samtools view -u -F4 $BAMFILE > mapped.bam # extract only reads that map to the reference genome 
+    # samtools sort -n mapped.bam -o mapped.sorted.bam
+	# bedtools bamtofastq -i mapped.sorted.bam -fq mapped.R1.fq  -fq2 mapped.R2.fq 2>/dev/null
+
+    # Load mapped reads directly from stored fq.gz file (alternative to the above extraction from BAM file)
+    MR1 = "$CLONE"/aqtrim/mapped/"$CLONE"_"$SAMPLENO.mapped.R1.fq.gz"
+    MR2 = "$CLONE"/aqtrim/mapped/"$CLONE"_"$SAMPLENO.mapped.R2.fq.gz"
+    zcat $MR1 > mapped.R1.fq
+    zcat $MR2 > mapped.R2.fq
+        
     # Combine mapped reads and "unmapped rotifer reads"
     ROTI_R1="$CLONE$ROTIREADS$CLONE"_"$SAMPLENO.rotireads.R1.fq"
     ROTI_R2="$CLONE$ROTIREADS$CLONE"_"$SAMPLENO.rotireads.R2.fq"
@@ -95,8 +102,8 @@ do
     # Run kraken2 analysis on mapped reads to determine false positive rate of contaminant discovery    
     echo "Run kraken2 analysis on mapped reads (against standard database)..."    
     REPORT_MAPPED="$CLONE"_"$SAMPLENO.mapped.std_db.log"
-    kraken2 --threads 10 --db $KRAKEN2_DEFAULT_DB --report $REPORT_MAPPED --paired mapped.R1.fq mapped.R2.fq  >/dev/null
-    mv $REPORT_MAPPED contaminants/kraken2/false_positives/
+    kraken2 --threads 10 --db $KRAKEN2_STD --report $REPORT_MAPPED --paired mapped.R1.fq mapped.R2.fq  >/dev/null
+    mv $REPORT_MAPPED contaminants/kraken2/false_positives3/
 
     # Additionally store "unmapped rotifer reads"
     UNCLASS_R1="$CLONE"_"$SAMPLENO.kraken2.unclass.R1.fq"
@@ -109,7 +116,8 @@ do
     # Clear all temporary files
     rm tmps*.bam unmapped.bam unmapped.sorted.bam \
        unmapped.R1.fq unmapped.R2.fq mapped.R1.fq mapped.R2.fq \
-       mapped.bam mapped.sorted.bam remaining.R1.fq remaining.R2.fq
+       remaining.R1.fq remaining.R2.fq \
+       # mapped.bam mapped.sorted.bam 
    
     
 done < SCRIPTS/datasets/OHJ_all.csv
