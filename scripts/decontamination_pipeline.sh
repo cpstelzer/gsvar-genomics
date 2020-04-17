@@ -86,8 +86,8 @@ do
 	# bedtools bamtofastq -i mapped.sorted.bam -fq mapped.R1.fq  -fq2 mapped.R2.fq 2>/dev/null
 
     # Load mapped reads directly from stored fq.gz file (alternative to the above extraction from BAM file)
-    MR1 = "$CLONE"/aqtrim/mapped/"$CLONE"_"$SAMPLENO.mapped.R1.fq.gz"
-    MR2 = "$CLONE"/aqtrim/mapped/"$CLONE"_"$SAMPLENO.mapped.R2.fq.gz"
+    MR1="$CLONE"/aqtrim/mapped/"$CLONE"_"$SAMPLENO.mapped.R1.fq.gz"
+    MR2="$CLONE"/aqtrim/mapped/"$CLONE"_"$SAMPLENO.mapped.R2.fq.gz"
     zcat $MR1 > mapped.R1.fq
     zcat $MR2 > mapped.R2.fq
         
