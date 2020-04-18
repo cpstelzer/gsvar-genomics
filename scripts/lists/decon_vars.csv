@@ -1,6 +1,6 @@
-trimmed;/aqtrim/;trimmed;false
-mapped;/aqtrim/mapped/;mapped;true
-unmapped;/aqtrim/unmapped/;unmapped;true
-ptoyot;/aqtrim/unmapped/map2pseudoT/;fraction.2pseudoT;true
-kraken2std;/aqtrim/unmapped/kraken2/;kraken2.std_db;false
-kraken2proto;/aqtrim/unmapped/kraken2/;kraken2.proto_db;false
+trimmed,/aqtrim/,trimmed,true
+mapped,/aqtrim/mapped/,mapped,true
+unmapped,/aqtrim/unmapped/,unmapped,true
+ptoyot,/aqtrim/unmapped/map2pseudoT/,fraction.2pseudoT,true
+kraken2std,/aqtrim/unmapped/kraken2/,kraken2.std_db,false
+kraken2proto,/aqtrim/unmapped/kraken2/,kraken2.proto_db,false
