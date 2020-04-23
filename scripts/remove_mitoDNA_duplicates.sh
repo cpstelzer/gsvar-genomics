@@ -42,9 +42,9 @@ do # loop through clones/libraries
     OUTBAM="map2mito.sorted.tmp.bam"
     OUTBAMI="$OUTBAM.bai"
     
-    # Mapping to mitochondrial genome and filtering out reads that did NOT map
+    # Mapping to mitochondrial genome of B. plicatilis and filtering out reads that did NOT map
     echo "run bowtie2 ..."
-    (bowtie2 -p 10 -X $FRAGSIZE -x $MITOINDEX -1 $INREADS1 -2 $INREADS2 -S $OUTSAM)2> $OUTLOG
+    (bowtie2 -p 8 -X $FRAGSIZE -x $MITOINDEX -1 $INREADS1 -2 $INREADS2 -S $OUTSAM)2> $OUTLOG
     samtools view -S -h -@ 10 $OUTSAM | samtools sort -o $OUTBAM
     samtools index $OUTBAM
 
@@ -56,10 +56,19 @@ do # loop through clones/libraries
 
     bedtools bamtofastq -i unmapped.sorted.bam -fq $OUTREADS1 -fq2 $OUTREADS2
     
+    # Remove PCR-duplicates (Using FastUniq, i.e., mapped and unmapped fraction)
+    module load fastuniq
+    FU_READS1="$OUTMAIN$CLONE"_"$SAMPLENO.roti-mito.dedup.R1.fq"
+    FU_READS2="$OUTMAIN$CLONE"_"$SAMPLENO.roti-mito.dedup.R2.fq"
+    echo $OUTREADS1 > inlist
+    echo $OUTREADS2 >> inlist
+    fastuniq -i inlist -o $FU_READS1 -p $FU_READS2
+    rm inlist
+
     # Run jellyfish while reads are still uncompressed
     echo "Run jellyfish..."
-	COMBIFQ="roti-mito.combined.tmp.fq"
-	cat $OUTREADS1 $OUTREADS2 > $COMBIFQ
+	COMBIFQ="roti-mito.dedup.combined.tmp.fq"
+	cat $FU_READS1 $FU_READS2 > $COMBIFQ
 	JELLYPATH="$OUTMAIN"jellyfish/""
 	mkdir -p $JELLYPATH	
 	JELLYFILE="$JELLYPATH$CLONE"_"$SAMPLENO.jf"
@@ -71,16 +80,7 @@ do # loop through clones/libraries
     echo "Run fastqc..."
     FQCPATH="$OUTMAIN"fastqc/""
 	mkdir -p $FQCPATH
-	fastqc --threads 8 $OUTREADS1 $OUTREADS2 -o $FQCPATH >/dev/null
-
-    # Remove PCR-duplicates (Using FastUniq, i.e., mapped and unmapped fraction)
-    module load fastuniq
-    FU_READS1="$OUTMAIN$CLONE"_"$SAMPLENO.roti-mito.dedup.R1.fq"
-    FU_READS2="$OUTMAIN$CLONE"_"$SAMPLENO.roti-mito.dedup.R2.fq"
-    echo $OUTREADS1 > inlist
-    echo $OUTREADS2 >> inlist
-    fastuniq -i inlist -o $FU_READS1 -p $FU_READS2
-    rm inlist
+	fastqc --threads 8 $FU_READS1 $FU_READS2 -o $FQCPATH >/dev/null
 
     # Quantify removal of reads/bases due to de-duplication
     FASTA_R1="temporary.R1.fasta"
@@ -111,19 +111,18 @@ do # loop through clones/libraries
     # Compression of read-files at the end of the run
     echo "Compressing read files..."    
     gzip $INREADS1 $INREADS2 
-    gzip $OUTREADS1 $OUTREADS2
     gzip $FU_READS1 $FU_READS2
 
     # Remove all temporary files
     rm $OUTSAM $OUTBAM $OUTBAMI
     rm tmps1.bam tmps2.bam tmps3.bam
     rm unmapped.bam unmapped.sorted.bam
-    rm $COMBIFQ
+    rm $COMBIFQ $OUTREADS1 $OUTREADS2
     
     echo "Completed for $CLONE"_"$SAMPLENO !"	
 
 
-done < SCRIPTS/datasets/OHJ_all.csv
+done < SCRIPTS/datasets/OHJ_105ff.csv   # same dataset as 'OHJ_all', but starting at OHJ105
 
 
 IFS=$OLDIFS
