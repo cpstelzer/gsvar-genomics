@@ -71,8 +71,8 @@ do # loop through clones/libraries
 	cat $FU_READS1 $FU_READS2 > $COMBIFQ
 	JELLYPATH="$OUTMAIN"jellyfish/""
 	mkdir -p $JELLYPATH	
-	JELLYFILE="$JELLYPATH$CLONE"_"$SAMPLENO.jf"
-	JELLYHISTO="$JELLYPATH$CLONE"_"$SAMPLENO.histo"
+	JELLYFILE="$JELLYPATH$CLONE"_"$SAMPLENO.roti-mito.dedup.jf"
+	JELLYHISTO="$JELLYPATH$CLONE"_"$SAMPLENO.roti-mito.dedup.histo"
 	jellyfish count -C -m 21 -s 1000000000 -t 10 $COMBIFQ -o $JELLYFILE
 	jellyfish histo -t 1 $JELLYFILE > $JELLYHISTO
 
