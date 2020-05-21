@@ -8,10 +8,7 @@ OLDIFS=$IFS     # save the existing field separator
 NEWIFS=";"
 IFS=$NEWIFS
 
-#cd tetraselmis
-#bowtie2-build GCA_006384855.1_TSEL_PacBio_SMRT_genomic.fna  tetra_striata_IDX # Building index (needs to be done only once)
-#cd ..
-TETRAIDX="/contaminants/tetraselmis/tetra_striata_IDX" # Path to the index of the Tetraselmis striata genome
+TETRAIDX="contaminants/tetra/Tetra_IDX" # Path to the index of the Tetraselmis striata genome
 
 cd ..  # escape contaminants folder
 
@@ -21,7 +18,7 @@ module load bedtools/2.27.1
 while read CLONE SAMPLENO FRAGSIZE
 
 do
-    echo "Currently processing  $CLONE"	
+    echo "Currently processing  $CLONE"_" $SAMPLENO"	
 	
     MAPPATH="$CLONE/finalmapping/"
 
@@ -47,8 +44,9 @@ do
     COL[1]=$CLONE
     COL[2]=$SAMPLENO    
     COL[3]=$READS1
+    IFS=$OLDIFS
     echo ${COL[*]} >> contaminants/map2tetra.potential_contam.report.csv
-
+    
     # Filtering out reads that DID map in the final alignment
     samtools view -u -F4 $INFILE > temp.mapped.bam # extract only reads that map to the reference genome 
     samtools sort -n temp.mapped.bam -o temp.mapped.sorted.bam
@@ -64,6 +62,7 @@ do
     CCOL[2]=$SAMPLENO    
     CCOL[3]=$READS2
     echo ${CCOL[*]} >> contaminants/map2tetra.false_positives.report.csv
+    IFS=$NEWIFS
 
     # Clear all temporary files
     rm tmps1.bam tmps2.bam tmps3.bam temp*

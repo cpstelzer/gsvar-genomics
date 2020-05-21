@@ -91,7 +91,7 @@ do # loop through clones/libraries
     sed -n '1~4s/^@/>/p;2~4p' $OUTREADS2 > $FASTA_R2
     # Before duplicate removal 
     N_READS_R1=$(grep -c '^>' $FASTA_R1)  # number of reads in multi-fasta
-    N_READS_R2=$(grep -c '^>' $FASTA_R1)
+    N_READS_R2=$(grep -c '^>' $FASTA_R2)
     (( COL[3] = $N_READS_R1 + $N_READS_R2 ))   # sum-up results of both mates
     TOTAL_BP_R1=$(grep -v '>' $FASTA_R1 | tr -d '\n' | wc -c) # total number of bases in fasta
     TOTAL_BP_R2=$(grep -v '>' $FASTA_R2 | tr -d '\n' | wc -c)
@@ -100,7 +100,7 @@ do # loop through clones/libraries
     sed -n '1~4s/^@/>/p;2~4p' $FU_READS1 > $FASTA_R1  # Convert to FASTA-format
     sed -n '1~4s/^@/>/p;2~4p' $FU_READS2 > $FASTA_R2
     N_READS_R1=$(grep -c '^>' $FASTA_R1)  # number of reads in multi-fasta
-    N_READS_R2=$(grep -c '^>' $FASTA_R1)
+    N_READS_R2=$(grep -c '^>' $FASTA_R2)
     (( COL[5] = $N_READS_R1 + $N_READS_R2 ))   # sum-up results of both mates
     TOTAL_BP_R1=$(grep -v '>' $FASTA_R1 | tr -d '\n' | wc -c) # total number of bases in fasta
     TOTAL_BP_R2=$(grep -v '>' $FASTA_R2 | tr -d '\n' | wc -c)

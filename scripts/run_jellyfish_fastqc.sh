@@ -14,6 +14,8 @@ THREADS=8         # number of threads
 MAX_RAM=1000000000        # maximum RAM
 
 INMAIN="/finalreads/"
+# EXTENSION=".roti-mito.dedup"
+EXTENSION=".finalreads"
 
 cd ..  # escape "SCRIPTS/" folder
 module load jellyfish/2.1.4
@@ -22,17 +24,18 @@ while read CLONE SAMPLENO FRAGSIZE
 
 do
 
-        echo "Currently processing  $CLONE"
+    echo "Currently processing  $CLONE"_"$SAMPLENO"
 
-    JELLYPATH="$CLONE$INMAIN"jellyfish/""
+    #JELLYPATH="$CLONE$INMAIN"jellyfish/""
+    JELLYPATH="$CLONE$INMAIN"jellyfish2/""
     mkdir -p $JELLYPATH
 
-    IN1_GZ="$CLONE$INMAIN$CLONE"_"$SAMPLENO".roti-mito.dedup.R1.fq.gz""
-    IN2_GZ="$CLONE$INMAIN$CLONE"_"$SAMPLENO".roti-mito.dedup.R2.fq.gz""
-    IN1="$CLONE$INMAIN$CLONE"_"$SAMPLENO".roti-mito.dedup.R1.fq""
-    IN2="$CLONE$INMAIN$CLONE"_"$SAMPLENO".roti-mito.dedup.R2.fq""
-    OUT_jf="$JELLYPATH$CLONE"_"$SAMPLENO".roti-mito.dedup.jf""
-    OUT_hist="$JELLYPATH$CLONE"_"$SAMPLENO".rotir-mito.dedup.histo""
+    IN1_GZ="$CLONE$INMAIN$CLONE"_"$SAMPLENO$EXTENSION".R1.fq.gz""
+    IN2_GZ="$CLONE$INMAIN$CLONE"_"$SAMPLENO$EXTENSION".R2.fq.gz""
+    IN1="$CLONE$INMAIN$CLONE"_"$SAMPLENO$EXTENSION".R1.fq""
+    IN2="$CLONE$INMAIN$CLONE"_"$SAMPLENO$EXTENSION".R2.fq""
+    OUT_jf="$JELLYPATH$CLONE"_"$SAMPLENO$EXTENSION".jf""
+    OUT_hist="$JELLYPATH$CLONE"_"$SAMPLENO$EXTENSION".histo""
 
     echo "Prepare input FQ-file..."
     gunzip $IN1_GZ $IN2_GZ
@@ -46,7 +49,8 @@ do
     rm jelly_input.fq
 
     echo "Run fastqc..."
-    FQCPATH="$INMAIN"fastqc/""
+    #FQCPATH="$INMAIN"fastqc/""
+    FQCPATH="$INMAIN"fastqc2/""
 	mkdir -p $FQCPATH
 	fastqc --threads 8 $IN1 $IN2 -o $FQCPATH >/dev/null
 
