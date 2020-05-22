@@ -46,7 +46,7 @@ do # loop through clones/libraries
 
         # Extract no. of reads and totalBP
         N_READS_R1=$(grep -c '^>' $FASTA_R1)  # number of reads in multi-fasta
-        N_READS_R2=$(grep -c '^>' $FASTA_R1)
+        N_READS_R2=$(grep -c '^>' $FASTA_R2)
         TOTAL_BP_R1=$(grep -v '>' $FASTA_R1 | tr -d '\n' | wc -c) # total number of bases in fasta
         TOTAL_BP_R2=$(grep -v '>' $FASTA_R2 | tr -d '\n' | wc -c)
         (( COL[$NCOUNT-1] = $N_READS_R1 + $N_READS_R2 ))   # sum-up results of both mates
