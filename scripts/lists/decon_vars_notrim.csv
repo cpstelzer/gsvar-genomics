@@ -1,0 +1,5 @@
+mapped;/aqtrim/mapped/;mapped;true
+unmapped;/aqtrim/unmapped/;unmapped;true
+ptoyot;/aqtrim/unmapped/map2pseudoT/;fraction.2pseudoT;true
+kraken2std;/aqtrim/unmapped/kraken2/;kraken2.std_db;true
+kraken2proto;/aqtrim/unmapped/kraken2/;kraken2.proto_db;true

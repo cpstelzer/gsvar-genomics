@@ -26,7 +26,9 @@ declare -a SUMPARS=("Basic Statistics"
 
 #MAINPATH="rawdata"
 #MAINPATH="aqtrim"
-MAINPATH="finalreads"
+#MAINPATH="finalreads"
+MAINPATH="finalreads2"
+
 
 OUTREPORT="SCRIPTS/fastqc.report.$MAINPATH.csv"
 
@@ -47,8 +49,10 @@ do
     # FILE2="$CLONE"/"$MAINPATH"/fastqc/"$CLONE"_"$SAMPLENO".R2_fastqc.zip""
     # FILE1="$CLONE"/"$MAINPATH"/fastqc/"$CLONE"_"$SAMPLENO".R1.trimmed_fastqc.zip""  # for aqtrim-stage of preprocessing
     # FILE2="$CLONE"/"$MAINPATH"/fastqc/"$CLONE"_"$SAMPLENO".R2.trimmed_fastqc.zip""
-    FILE1="$CLONE"/"$MAINPATH"/fastqc/"$CLONE"_"$SAMPLENO".roti-mito.dedup.R1_fastqc.zip""  # for finalreads-stage of preprocessing
-    FILE2="$CLONE"/"$MAINPATH"/fastqc/"$CLONE"_"$SAMPLENO".roti-mito.dedup.R2_fastqc.zip""
+    #FILE1="$CLONE"/"$MAINPATH"/fastqc/"$CLONE"_"$SAMPLENO".roti-mito.dedup.R1_fastqc.zip""  # for finalreads-stage of preprocessing
+    #FILE2="$CLONE"/"$MAINPATH"/fastqc/"$CLONE"_"$SAMPLENO".roti-mito.dedup.R2_fastqc.zip""
+    FILE1="$CLONE"/"$MAINPATH"/fastqc/"$CLONE"_"$SAMPLENO".finalreads.R1_fastqc.zip""  # for finalreads-stage of preprocessing
+    FILE2="$CLONE"/"$MAINPATH"/fastqc/"$CLONE"_"$SAMPLENO".finalreads.R2_fastqc.zip""
     
 
 
@@ -58,8 +62,10 @@ do
     #FQCS2=""TEMP_FQC/"$CLONE"_"$SAMPLENO".R2_fastqc""
     #FQCS1=""TEMP_FQC/"$CLONE"_"$SAMPLENO".R1.clean_fastqc"" # new path of extracted folder (aqtrim)
     #FQCS2=""TEMP_FQC/"$CLONE"_"$SAMPLENO".R2.clean_fastqc""
-    FQCS1=""TEMP_FQC/"$CLONE"_"$SAMPLENO".roti-mito.dedup.R1_fastqc"" # new path of extracted folder (finalreads)
-    FQCS2=""TEMP_FQC/"$CLONE"_"$SAMPLENO".roti-mito.dedup.R2_fastqc""
+    #FQCS1=""TEMP_FQC/"$CLONE"_"$SAMPLENO".roti-mito.dedup.R1_fastqc"" # new path of extracted folder (finalreads)
+    #FQCS2=""TEMP_FQC/"$CLONE"_"$SAMPLENO".roti-mito.dedup.R2_fastqc""
+    FQCS1=""TEMP_FQC/"$CLONE"_"$SAMPLENO".finalreads.R1_fastqc"" # new path of extracted folder (finalreads)
+    FQCS2=""TEMP_FQC/"$CLONE"_"$SAMPLENO".finalreads.R2_fastqc""
 
 
 

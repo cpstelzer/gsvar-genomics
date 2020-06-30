@@ -1,0 +1,39 @@
+#!/bin/bash
+
+#$ -cwd
+#$ -N hecaton_loop
+#$ -j yes
+#$ -M claus-peter.stelzer@uibk.ac.at
+#$ -m eas
+
+#$ -pe openmp 5
+#$ -l h_vmem=9.8G
+
+
+## Actual hecaton pipeline:
+ 
+OLDIFS=$IFS     # save the existing field separator
+IFS=";"
+
+module load singularity/3.x
+cd $SCRATCH/hecaton_singularity
+./hecaton.sh 
+
+
+SCVAR='$SCRATCH'    # literal $SCRATCH
+
+while read CLONE SAMPLENO FRAGSIZE
+
+do
+
+LIBNAME="$CLONE_$SAMPLENO"  # merge strings to generate input file ID (note: variable FRAGSIZE is not used here)
+
+OUTDIR="$SCVAR/data/hecaton_output/$LIBNAME"
+mkdir -p $OUTDIR
+
+bash -c "cd /hecaton; nextflow run -c nextflow/nextflow.config -w $SCVAR/hecaton_singularity nextflow/hecaton.nf --genome_file $SCVAR/data/assembly/OHJ7i3n10_VBCFpol_sorted.fa --reads $SCVAR/data/finalreads/$LIBNAME.roti-mito.dedup.R{1,2}.fq.gz --manta_config docker/configManta_weight_1.py.ini --output_dir $OUTDIR --model_file models/random_forest_model_concat_A_thaliana_ColxCvi_O_sativa_Suijing18_coverage_10x_insertions_balanced_subsample.pk"
+
+done < $SCRATCH/data/OHJ_all.csv
+
+
+IFS=$OLDIFS

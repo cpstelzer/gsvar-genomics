@@ -55,7 +55,7 @@ do # loop through clones/libraries
         # Clean up after data extraction
         gzip $FILE_R1 $FILE_R2; rm $FASTA_R1 $FASTA_R2
         
-    done < contaminants/decon_vars.csv
+    done < contaminants/decon_vars_notrim.csv
 
     echo ${COL[*]}
     echo ${COL[*]} >> "contaminants/deconreport.csv" 

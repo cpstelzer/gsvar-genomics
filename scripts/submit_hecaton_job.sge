@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#$ -cwd
+#$ -N hecaton
+#$ -j yes
+#$ -M claus-peter.stelzer@uibk.ac.at
+#$ -m eas
+
+#$ -pe openmp 5
+#$ -l h_vmem=9.8G
+
+module load singularity/3.x
+cd $SCRATCH/hecaton_singularity
+./hecaton.sh bash hecaton_1sample.sh

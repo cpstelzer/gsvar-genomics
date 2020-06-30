@@ -6,11 +6,11 @@ OLDIFS=$IFS     # save the existing field separator
 NEWIFS=";"
 IFS=$NEWIFS
 
-INMAIN="/finalmapping/"
-OUTMAIN="results/finalmapping/"  # target location
+INMAIN="/finalreads/"
+OUTMAIN="results/finalreads/fq/"  # target location
 
 cd ..  # escape "SCRIPTS" folder
-mkdir $OUTMAIN
+# mkdir $OUTMAIN
 
 
 while read CLONE SAMPLENO FRAGSIZE
@@ -19,9 +19,12 @@ do
   	
     echo "Currently processing  $CLONE"	
     # OHJ13_mbl2016_to_VBCFpol.sorted.bam
-    INFILE="$CLONE$INMAIN$CLONE"_"$SAMPLENO"_to_VBCFpol.sorted.bam""
-    OUTFILE="$OUTMAIN$CLONE"_"$SAMPLENO"_to_VBCFpol.sorted.bam""
-    cp $INFILE $OUTFILE
+    INFILE1="$CLONE$INMAIN$CLONE"_"$SAMPLENO".roti-mito.dedup.R1.fq.gz""
+    INFILE2="$CLONE$INMAIN$CLONE"_"$SAMPLENO".roti-mito.dedup.R2.fq.gz""
+    OUTFILE1="$OUTMAIN$CLONE"_"$SAMPLENO".roti-mito.dedup.R1.fq.gz""
+    OUTFILE2="$OUTMAIN$CLONE"_"$SAMPLENO".roti-mito.dedup.R2.fq.gz""
+    cp $INFILE1 $OUTFILE1
+    cp $INFILE2 $OUTFILE2
 
 
 done < SCRIPTS/datasets/OHJ_all.csv

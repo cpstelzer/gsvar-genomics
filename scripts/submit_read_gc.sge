@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#$ -cwd
+#$ -N seqkit_gc
+#$ -j yes
+#$ -M claus-peter.stelzer@uibk.ac.at
+#$ -m eas
+
+#$ -pe openmp 1
+#$ -l h_vmem=9.8G
+
+echo "${JOB_ID:-$$}, $NSLOTS" >> vmtouch-tests_SAS_150G_jobid_nslots.txt
+
+module load  Anaconda3/2019.10
+source $UIBK_ANACONDA3_PROFILE
+conda activate bioconda
+
+bash -c "cd $SCRATCH/evol5/finalreads; ./read_gc_content.sh"
+
